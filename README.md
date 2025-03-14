@@ -20,6 +20,44 @@ conda env create -f environment.yaml
 conda activate ldm
 ```
 
+## Troubleshooting
+
+### Environment Setup Issues
+
+If you encounter dependency issues after setting up the conda environment, try the following fixes:
+
+```bash
+# Fix for torch metrics compatibility
+pip install torchmetrics==0.5.0
+
+# Install required repositories
+pip install -e git+https://github.com/CompVis/taming-transformers.git@master#egg=taming-transformers
+pip install -e git+https://github.com/openai/CLIP.git@main#egg=clip
+pip install -e .
+
+# Fix for kornia
+pip install kornia==0.5.1
+```
+
+### TensorBoard Issues
+
+If you encounter problems with TensorBoard, try reinstalling with specific versions:
+
+```bash
+pip uninstall -y tensorboard protobuf
+pip install tensorboard==2.11.0 protobuf==3.19.4
+```
+
+### Monitoring Training with TensorBoard
+
+To monitor your training progress, run TensorBoard with:
+
+```bash
+nohup tensorboard --logdir ~/latent-diffusion-semantic/logs/ --host 0.0.0.0 --port 8088 &
+```
+
+Then access the TensorBoard interface in your browser at `http://<your-server-ip>:8088`
+
 ## DRSK Dataset Preparation
 
 This repository is configured to work with the DRSK dataset available at:
@@ -107,6 +145,5 @@ python scripts/sample_diffusion.py -r logs/<your_run>/checkpoints/last.ckpt -c 5
   publisher={AIDA},
   year={2023}
 }
-```
 
 
