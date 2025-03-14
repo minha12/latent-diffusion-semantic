@@ -11,14 +11,12 @@ class SegmentationBase(Dataset):
                  data_csv, data_root, segmentation_root,
                  size=None, random_crop=False, interpolation="bicubic",
                  n_labels=5, shift_segmentation=False,
-                 force_resize=True,
                  ):
         self.n_labels = n_labels
         self.shift_segmentation = shift_segmentation
         self.data_csv = data_csv
         self.data_root = data_root
         self.segmentation_root = segmentation_root
-        self.force_resize = force_resize
         with open(self.data_csv, "r") as f:
             self.image_paths = f.read().splitlines()
         self._length = len(self.image_paths)
@@ -40,25 +38,16 @@ class SegmentationBase(Dataset):
                 "bicubic": cv2.INTER_CUBIC,
                 "area": cv2.INTER_AREA,
                 "lanczos": cv2.INTER_LANCZOS4}[self.interpolation]
-            
             self.image_rescaler = albumentations.SmallestMaxSize(max_size=self.size,
-                                                                interpolation=self.interpolation)
+                                                                 interpolation=self.interpolation)
             self.segmentation_rescaler = albumentations.SmallestMaxSize(max_size=self.size,
                                                                         interpolation=cv2.INTER_NEAREST)
-            
-            # Direct resize transformations (used when both dimensions > target size)
-            self.image_resizer = albumentations.Resize(height=self.size, width=self.size,
-                                                      interpolation=self.interpolation)
-            self.segmentation_resizer = albumentations.Resize(height=self.size, width=self.size,
-                                                             interpolation=cv2.INTER_NEAREST)
-            
             self.center_crop = not random_crop
             if self.center_crop:
                 self.cropper = albumentations.CenterCrop(height=self.size, width=self.size)
             else:
                 self.cropper = albumentations.RandomCrop(height=self.size, width=self.size)
-            
-            # We'll decide on the preprocessor in __getitem__ based on image dimensions
+            self.preprocessor = self.cropper
 
     def __len__(self):
         return self._length
@@ -69,28 +58,24 @@ class SegmentationBase(Dataset):
         if not image.mode == "RGB":
             image = image.convert("RGB")
         image = np.array(image).astype(np.uint8)
-        
+        if self.size is not None:
+            image = self.image_rescaler(image=image)["image"]
         segmentation = Image.open(example["segmentation_path_"])
         assert segmentation.mode == "L", segmentation.mode
         segmentation = np.array(segmentation).astype(np.uint8)
         if self.shift_segmentation:
             # used to support segmentations containing unlabeled==255 label
             segmentation = segmentation+1
-        
         if self.size is not None:
-            # Check if we should force resize or use original crop-based approach
-            if self.force_resize and image.shape[0] > self.size and image.shape[1] > self.size:
-                # Both dimensions > target size, directly resize to target size
-                processed = {"image": self.image_resizer(image=image)["image"],
-                            "mask": self.segmentation_resizer(image=segmentation)["image"]}
-            else:
-                # Original approach: resize smallest dimension then crop
-                image = self.image_rescaler(image=image)["image"]
-                segmentation = self.segmentation_rescaler(image=segmentation)["image"]
-                processed = self.cropper(image=image, mask=segmentation)
+            segmentation = self.segmentation_rescaler(image=segmentation)["image"]
+        if self.size is not None:
+            processed = self.preprocessor(image=image,
+                                          mask=segmentation
+                                          )
         else:
-            processed = {"image": image, "mask": segmentation}
-            
+            processed = {"image": image,
+                         "mask": segmentation
+                         }
         example["image"] = (processed["image"]/127.5 - 1.0).astype(np.float32)
         segmentation = processed["mask"]
         onehot = np.eye(self.n_labels)[segmentation]
