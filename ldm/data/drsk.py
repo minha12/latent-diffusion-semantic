@@ -95,7 +95,7 @@ class DrskSeg(SegmentationBase):
     def __init__(self, size=None, random_crop=False, interpolation="bicubic"):
         super().__init__(data_csv=os.path.expanduser("~/datasets/drsk/image_names.txt"),
                          data_root=os.path.expanduser("~/datasets/drsk/images"),
-                         segmentation_root=os.path.expanduser("~/datasets/drsk/segmentation"),
+                         segmentation_root=os.path.expanduser("~/datasets/drsk/plain-segmentation"),
                          size=size, random_crop=random_crop, interpolation=interpolation)
 
 
@@ -103,7 +103,7 @@ class DrskSegTrain(SegmentationBase):
     def __init__(self, size=None, random_crop=False, interpolation="bicubic"):
         super().__init__(data_csv=os.path.expanduser("~/datasets/drsk/image_names_train.txt"),
                          data_root=os.path.expanduser("~/datasets/drsk/images"),
-                         segmentation_root=os.path.expanduser("~/datasets/drsk/segmentation"),
+                         segmentation_root=os.path.expanduser("~/datasets/drsk/plain-segmentation"),
                          size=size, random_crop=random_crop, interpolation=interpolation)
 
 
@@ -111,5 +111,5 @@ class DrskSegEval(SegmentationBase):
     def __init__(self, size=None, random_crop=False, interpolation="bicubic"):
         super().__init__(data_csv=os.path.expanduser("~/datasets/drsk/image_names_eval.txt"),
                          data_root=os.path.expanduser("~/datasets/drsk/images"),
-                         segmentation_root=os.path.expanduser("~/datasets/drsk/segmentation"),
+                         segmentation_root=os.path.expanduser("~/datasets/drsk/plain-segmentation"),
                          size=size, random_crop=random_crop, interpolation=interpolation)
