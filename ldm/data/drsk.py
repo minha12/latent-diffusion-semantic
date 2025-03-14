@@ -10,7 +10,7 @@ class SegmentationBase(Dataset):
     def __init__(self,
                  data_csv, data_root, segmentation_root,
                  size=None, random_crop=False, interpolation="bicubic",
-                 n_labels=182, shift_segmentation=False,
+                 n_labels=5, shift_segmentation=False,
                  ):
         self.n_labels = n_labels
         self.shift_segmentation = shift_segmentation

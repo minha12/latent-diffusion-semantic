@@ -68,7 +68,7 @@ model:
       target: ldm.modules.encoders.modules.SpatialRescaler
       params:
         n_stages: 2
-        in_channels: 182
+        in_channels: 5
         out_channels: 3
 
 data:
