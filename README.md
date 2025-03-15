@@ -1,9 +1,5 @@
 # Latent Diffusion Models for Semantic Segmentation
-[arXiv](https://arxiv.org/abs/2112.10752) | [BibTeX](#bibtex)
-
-<p align="center">
-<img src=assets/results.gif />
-</p>
+Source: [arXiv](https://arxiv.org/abs/2112.10752) | [BibTeX](#bibtex)
 
 This repository contains code for training Latent Diffusion Models (LDM) using segmentation masks from the DRSK dataset.
 
