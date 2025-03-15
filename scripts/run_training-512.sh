@@ -1,0 +1,1 @@
+nohup python main.py --base models/ldm/drsk/config-512.yaml -t --gpus 0,1,2,3 --strategy ddp > ldm_training.log 2>&1 &
