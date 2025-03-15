@@ -40,6 +40,7 @@ model:
         - 4
         - 8
         num_heads: 8
+        #use_checkpoint: True
 
     first_stage_config:
       target: ldm.models.autoencoder.VQModelInterface
@@ -74,8 +75,8 @@ model:
 data:
   target: main.DataModuleFromConfig
   params:
-    batch_size: 12
-    num_workers: 5
+    batch_size: 42
+    num_workers: 8
     wrap: False
     train:
       target: ldm.data.drsk.DrskSegTrain  #  PUT YOUR DATASET 
@@ -91,10 +92,11 @@ lightning:
     image_logger:
       target: main.ImageLogger
       params:
-        batch_frequency: 5000
-        max_images: 8
+        batch_frequency: 500
+        max_images: 4
         increase_log_steps: False
 
 
   trainer:
+    resume_from_checkpoint: logs/2025-03-14T16-03-38_config/checkpoints/last.ckpt
     benchmark: True
