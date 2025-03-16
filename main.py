@@ -4,6 +4,7 @@ import time
 import torch
 import torchvision
 import pytorch_lightning as pl
+import gc  # Add import for garbage collection
 
 from packaging import version
 from omegaconf import OmegaConf
@@ -413,6 +414,10 @@ class CUDACallback(Callback):
             rank_zero_info(f"Average Peak memory {max_memory:.2f}MiB")
         except AttributeError:
             pass
+            
+        # Add explicit garbage collection to prevent memory leaks
+        gc.collect()
+        torch.cuda.empty_cache()
 
 
 if __name__ == "__main__":
