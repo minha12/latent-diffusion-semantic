@@ -10,7 +10,7 @@ model:
     first_stage_key: image
     cond_stage_key: segmentation
     image_size: 64
-    channels: 3
+    channels: 4
     concat_mode: true
     cond_stage_trainable: true
 
@@ -92,7 +92,7 @@ lightning:
     image_logger:
       target: main.ImageLogger
       params:
-        batch_frequency: 500
+        batch_frequency: 2
         max_images: 4
         increase_log_steps: False
 
