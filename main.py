@@ -369,6 +369,10 @@ class ImageLogger(Callback):
 
             if is_train:
                 pl_module.train()
+                
+            # Help garbage collection by removing references to images
+            for k in images:
+                images[k] = None  # Help garbage collection
 
     def check_frequency(self, check_idx):
         if ((check_idx % self.batch_freq) == 0 or (check_idx in self.log_steps)) and (
