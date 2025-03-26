@@ -76,8 +76,8 @@ model:
 data:
   target: main.DataModuleFromConfig
   params:
-    batch_size: 8
-    num_workers: 8
+    batch_size: 6
+    num_workers: 4
     wrap: False
     train:
       target: ldm.data.drsk.DrskSegTrain  #  PUT YOUR DATASET 
@@ -98,7 +98,7 @@ lightning:
       target: main.ImageLogger
       params:
         batch_frequency: 500
-        max_images: 4
+        max_images: 3
         increase_log_steps: False
 
 
@@ -107,5 +107,5 @@ lightning:
     size: 512
     #crop_size: 512
     #segmentation_to_float32: true
-    #resume_from_checkpoint: logs/2025-03-14T16-03-38_config/checkpoints/last.ckpt
+    resume_from_checkpoint: logs/2025-03-16T13-05-51_config-512-with-vq-f4/checkpoints/last.ckpt
     
