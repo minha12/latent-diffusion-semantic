@@ -1,4 +1,8 @@
 __pycache__
 latent_diffusion.egg-info
 logs
+*.log
+*.ckpt
+*.out
+outputs/
 
